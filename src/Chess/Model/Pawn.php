@@ -3,6 +3,7 @@
 namespace Chess\Model;
 
 use Chess\ColorEnum;
+use Chess\Game;
 
 /**
  * Created by PhpStorm.
@@ -10,17 +11,66 @@ use Chess\ColorEnum;
  * Date: 08.02.20
  * Time: 19:12
  */
+class Pawn extends Figure
+{
 
-class Pawn extends Figure {
+    private $firstMove = true;
+
     protected $symbolVariant = [
         ColorEnum::WHITE => '♙',
         ColorEnum::BLACK => '♟',
     ];
 
-    public function checkMove(array $start, array $end): bool {
-        if ($start['letter'] == $end['letter'] && $start['line'] == $end['line']) {
-            return false;
+    /**
+     * @param array $start
+     * @param array $end
+     * @return bool
+     */
+    public function checkMove(array $start, array $end): bool
+    {
+        $result = $this->checkMoveByColor($start['line'], $end['line']) && $this->checkPossibleMove($start, $end);
+        if($this->firstMove && $result){
+            $this->firstMove = false;
         }
-        return true;
+        return $result;
+    }
+
+    /**
+     * Проверяет, что движение назад запрещено
+     * @param int $startLine
+     * @param int $endLine
+     * @return bool
+     */
+    private function checkMoveByColor(int $startLine, int $endLine){
+        return ($this->color === ColorEnum::WHITE && $startLine - $endLine < 0)
+            || ($this->color === ColorEnum::BLACK && $startLine - $endLine > 0);
+    }
+
+    /**
+     * Проверяет возможно ли движение на клетку
+     * @param array $start
+     * @param array $end
+     * @return bool
+     */
+    private function checkPossibleMove(array $start, array $end){
+        $move = 1;
+        if($this->color === ColorEnum::BLACK){
+            $move = -1;
+        }
+        $nextLine = $start['line'] + $move;
+        $ordLetter = ord($start['letter']);
+        $endCellFigure = Game::$board->getCell($end['letter'], $end['line']);
+        $nextCellFigure = Game::$board->getCell($start['letter'], $nextLine);
+        $possible = [];
+        if($endCellFigure === null && $nextCellFigure === null){
+            if($this->firstMove){
+                $possible[] = $start['letter'] . ($nextLine + $move);
+            }
+            $possible[] = $start['letter'] . $nextLine;
+        }elseif(($endCellFigure instanceof Figure) && $endCellFigure->color !== $this->color){
+            $possible[] = chr($ordLetter + 1) . $nextLine;
+            $possible[] = chr($ordLetter - 1) . $nextLine;
+        }
+        return in_array(($end['letter'] . $end['line']), $possible, true);
     }
 }

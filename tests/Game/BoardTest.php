@@ -14,11 +14,11 @@ use PHPUnit\Framework\TestCase;
 
 class BoardTest extends TestCase {
     public function testGetCellColor() {
-        assertEquals(1, Board::getCellColor('a', 1));
-        assertEquals(0, Board::getCellColor('b', 1));
-        assertEquals(1, Board::getCellColor('b', 2));
-        assertEquals(0, Board::getCellColor('e', 2));
-        assertEquals(0, Board::getCellColor('e', 4));
-        assertEquals(1, Board::getCellColor('h', 8));
+        $this->assertEquals(1, Board::getCellColor('a', 1));
+        $this->assertEquals(0, Board::getCellColor('b', 1));
+        $this->assertEquals(1, Board::getCellColor('b', 2));
+        $this->assertEquals(0, Board::getCellColor('e', 2));
+        $this->assertEquals(0, Board::getCellColor('e', 4));
+        $this->assertEquals(1, Board::getCellColor('h', 8));
     }
 }

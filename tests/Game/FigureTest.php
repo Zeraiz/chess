@@ -12,78 +12,89 @@ use PHPUnit\Framework\TestCase;
  * Date: 08.02.20
  * Time: 23:00
  */
-
-class FigureTest extends TestCase {
-    public function testPawn() {
+class FigureTest extends TestCase
+{
+    public function testPawn()
+    {
         $figure = Figure::create('a', 2);
-        assertEquals('♙', $figure->symbol);
+        $this->assertEquals('♙', $figure->symbol);
         $figure = Figure::create('b', 2);
-        assertEquals('♙', $figure->symbol);
+        $this->assertEquals('♙', $figure->symbol);
         $figure = Figure::create('c', 2);
-        assertEquals('♙', $figure->symbol);
+        $this->assertEquals('♙', $figure->symbol);
         $figure = Figure::create('h', 2);
-        assertEquals('♙', $figure->symbol);
+        $this->assertEquals('♙', $figure->symbol);
         $figure = Figure::create('a', 7);
-        assertEquals('♟', $figure->symbol);
+        $this->assertEquals('♟', $figure->symbol);
         $figure = Figure::create('f', 7);
-        assertEquals('♟', $figure->symbol);
+        $this->assertEquals('♟', $figure->symbol);
         $figure = Figure::create('g', 7);
-        assertEquals('♟', $figure->symbol);
+        $this->assertEquals('♟', $figure->symbol);
         $figure = Figure::create('h', 7);
-        assertEquals('♟', $figure->symbol);
+        $this->assertEquals('♟', $figure->symbol);
     }
 
-    public function testRook() {
+    public function testRook()
+    {
         $figure = Figure::create('a', 1);
-        assertEquals('♖', $figure->symbol);
+        $this->assertEquals('♖', $figure->symbol);
         $figure = Figure::create('h', 1);
-        assertEquals('♖', $figure->symbol);
+        $this->assertEquals('♖', $figure->symbol);
         $figure = Figure::create('a', 8);
-        assertEquals('♜', $figure->symbol);
+        $this->assertEquals('♜', $figure->symbol);
         $figure = Figure::create('h', 8);
-        assertEquals('♜', $figure->symbol);
+        $this->assertEquals('♜', $figure->symbol);
     }
 
-    public function testKnight() {
+    public function testKnight()
+    {
         $figure = Figure::create('b', 1);
-        assertEquals('♘', $figure->symbol);
+        $this->assertEquals('♘', $figure->symbol);
         $figure = Figure::create('g', 1);
-        assertEquals('♘', $figure->symbol);
+        $this->assertEquals('♘', $figure->symbol);
         $figure = Figure::create('b', 8);
-        assertEquals('♞', $figure->symbol);
+        $this->assertEquals('♞', $figure->symbol);
         $figure = Figure::create('g', 8);
-        assertEquals('♞', $figure->symbol);
+        $this->assertEquals('♞', $figure->symbol);
     }
 
-    public function testBishop() {
+    public function testBishop()
+    {
         $figure = Figure::create('c', 1);
-        assertEquals('♗', $figure->symbol);
+        $this->assertEquals('♗', $figure->symbol);
         $figure = Figure::create('f', 1);
-        assertEquals('♗', $figure->symbol);
+        $this->assertEquals('♗', $figure->symbol);
         $figure = Figure::create('c', 8);
-        assertEquals('♝', $figure->symbol);
+        $this->assertEquals('♝', $figure->symbol);
         $figure = Figure::create('f', 8);
-        assertEquals('♝', $figure->symbol);
+        $this->assertEquals('♝', $figure->symbol);
     }
 
-    public function testQueen() {
+    public function testQueen()
+    {
         $figure = Figure::create('d', 1);
-        assertEquals('♕', $figure->symbol);
+        $this->assertEquals('♕', $figure->symbol);
         $figure = Figure::create('d', 8);
-        assertEquals('♛', $figure->symbol);
+        $this->assertEquals('♛', $figure->symbol);
     }
 
-    public function testKing() {
+    public function testKing()
+    {
         $figure = Figure::create('e', 1);
-        assertEquals('♔', $figure->symbol);
+        $this->assertEquals('♔', $figure->symbol);
         $figure = Figure::create('e', 8);
-        assertEquals('♚', $figure->symbol);
+        $this->assertEquals('♚', $figure->symbol);
     }
 
-    public function testMovePawn() {
-        $game   = new Game();
-        $figure = $game->board->getCell('e', 2);
-        $start  = [
+    public function testMovePawn()
+    {
+        $game = new Game();
+        $figure = $game::$board->getCell('e', 2);
+        $game::$board->setMove(
+            ['letter' => 'e', 'line' => 7],
+            ['letter' => 'e', 'line' => 3]
+        );
+        $start = [
             'letter' => 'e',
             'line'   => 2,
         ];
@@ -91,8 +102,26 @@ class FigureTest extends TestCase {
             'letter' => 'e',
             'line'   => 4,
         ];
-        assertTrue($figure->checkMove($start, $end));
-        $start  = [
+        $this->assertFalse($figure->checkMove($start, $end));
+        $start = [
+            'letter' => 'e',
+            'line'   => 2,
+        ];
+        $end = [
+            'letter' => 'e',
+            'line'   => 3,
+        ];
+        $this->assertFalse($figure->checkMove($start, $end));
+        $start = [
+            'letter' => 'e',
+            'line'   => 2,
+        ];
+        $end = [
+            'letter' => 'd',
+            'line'   => 3,
+        ];
+        $this->assertFalse($figure->checkMove($start, $end));
+        $start = [
             'letter' => 'e',
             'line'   => 2,
         ];
@@ -100,6 +129,6 @@ class FigureTest extends TestCase {
             'letter' => 'e',
             'line'   => 2,
         ];
-        assertFalse($figure->checkMove($start, $end));
+        $this->assertFalse($figure->checkMove($start, $end));
     }
 }

@@ -23,7 +23,7 @@ class Game {
     /**
      * @var Board
      */
-    public $board;
+    public static $board;
 
     /**
      * @var bool
@@ -57,7 +57,7 @@ class Game {
 
     public function __construct() {
         $this->isFinish = false;
-        $this->board    = new Board();
+        self::$board    = new Board();
         $this->color    = ColorEnum::WHITE;
         $this->listing  = [];
     }
@@ -85,14 +85,14 @@ class Game {
     }
 
     public function drow() {
-        $this->board->drow();
+        self::$board->drow();
         echo self::INPUT_DEFAULT_MESSAGE;
     }
 
     public function move() {
-        $this->board->setMove($this->start, $this->end);
+        self::$board->setMove($this->start, $this->end);
         $this->listing[] = $this->lastMove;
-        if ($this->color == ColorEnum::WHITE) {
+        if ($this->color === ColorEnum::WHITE) {
             $this->color = ColorEnum::BLACK;
         } else {
             $this->color = ColorEnum::WHITE;
@@ -100,23 +100,23 @@ class Game {
     }
 
     private function checkMove(string $move) {
-        if ($move == '') {
+        if ($move === '') {
             throw new \Exception(self::WRONG_MOVE_MESSAGE);
         }
-        if ($move == 'help') {
+        if ($move === 'help') {
             $this->helpMessage();
             throw new \Exception(self::INPUT_DEFAULT_MESSAGE);
         }
-        if ($move == 'exit') {
+        if ($move === 'exit') {
             $this->isFinish = true;
             throw new \Exception(self::BYBY_MESSAGE);
         }
 
         $parts = explode('-', strtolower($move));
-        if (count($parts) != 2) {
+        if (count($parts) !== 2) {
             throw new \Exception(self::WRONG_MOVE_MESSAGE);
         }
-        if (strlen($parts[0]) != 2 || strlen($parts[1]) != 2) {
+        if (strlen($parts[0]) !== 2 || strlen($parts[1]) !== 2) {
             throw new \Exception(self::WRONG_MOVE_MESSAGE);
         }
 
@@ -128,7 +128,8 @@ class Game {
             'letter' => TypeCaster::letter($parts[1][0]),
             'line'   => TypeCaster::int($parts[1][1]),
         ];
-        $figure = $this->board->getCell($this->start['letter'], $this->start['line']);
+        $figure = self::$board->getCell($this->start['letter'], $this->start['line']);
+
         if (!$figure) {
             throw new \Exception(self::WRONG_FIGURE_MESSAGE);
         }
@@ -138,6 +139,7 @@ class Game {
         if (!$figure->checkMove($this->start, $this->end)) {
             throw new \Exception(self::WRONG_PIECE_MOVE_MESSAGE);
         }
+
         $this->lastMove = $move;
     }
 
