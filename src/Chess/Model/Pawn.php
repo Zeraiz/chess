@@ -58,7 +58,6 @@ class Pawn extends Figure
             $move = -1;
         }
         $nextLine = $start['line'] + $move;
-        $ordLetter = ord($start['letter']);
         $endCellFigure = Game::$board->getCell($end['letter'], $end['line']);
         $nextCellFigure = Game::$board->getCell($start['letter'], $nextLine);
         $possible = [];
@@ -68,6 +67,7 @@ class Pawn extends Figure
             }
             $possible[] = $start['letter'] . $nextLine;
         }elseif(($endCellFigure instanceof Figure) && $endCellFigure->color !== $this->color){
+            $ordLetter = ord($start['letter']);
             $possible[] = chr($ordLetter + 1) . $nextLine;
             $possible[] = chr($ordLetter - 1) . $nextLine;
         }
